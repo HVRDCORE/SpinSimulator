@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "pybind11>=2.6.0", "cmake>=3.10"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poker-simulator"
+version = "1.0.0"
+description = "A high-performance C++ Spin&Go poker simulator with Python bindings"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "AI Assistant", email = "example@example.com"}
+]
+dependencies = [
+    "gym",
+    "numpy",
+    "pybind11>=2.6.0",
+    "setuptools>=42",
+    "tensorflow>=2.3.0",
+    "tqdm",
+    "wheel",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/poker-simulator"
+"Bug Tracker" = "https://github.com/yourusername/poker-simulator/issues"

@@ -1,0 +1,7 @@
+gym>=0.26.2
+numpy>=2.2.4
+pybind11>=2.13.6
+setuptools>=78.1.0
+tensorflow>=2.14.0
+tqdm>=4.67.1
+wheel>=0.42.0

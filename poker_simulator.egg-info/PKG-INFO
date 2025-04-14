@@ -1,0 +1,55 @@
+Metadata-Version: 2.4
+Name: poker-simulator
+Version: 1.0.0
+Summary: A high-performance C++ Spin&Go poker simulator with Python bindings
+Author: AI Assistant
+Author-email: AI Assistant <example@example.com>
+License: MIT
+Project-URL: Homepage, https://github.com/yourusername/poker-simulator
+Project-URL: Bug Tracker, https://github.com/yourusername/poker-simulator/issues
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: gym>=0.26.2
+Requires-Dist: numpy>=2.2.4
+Requires-Dist: pybind11>=2.13.6
+Requires-Dist: setuptools>=78.1.0
+Requires-Dist: tensorflow>=2.14.0
+Requires-Dist: tqdm>=4.67.1
+Requires-Dist: wheel>=0.42.0
+Dynamic: author
+Dynamic: requires-python
+
+# Spin&Go Poker Simulator
+
+A high-performance C++ Spin&Go poker simulator with Python bindings for reinforcement learning and tree traversal algorithms.
+
+## Features
+
+- Fast C++ core implementation of Texas Hold'em rules for Spin&Go tournaments
+- Python bindings for easy integration with machine learning frameworks
+- Support for reinforcement learning (RL) with Ray/RLlib
+- Implementation of tree traversal algorithms (MCCFR, Deep CFR)
+- Optimized hand evaluation and game state representation
+- Comprehensive unit tests and benchmarks
+
+## Requirements
+
+- C++17 compatible compiler (GCC 8+, Clang 6+, or MSVC 2019+)
+- CMake 3.10+
+- Python 3.8+
+- pybind11
+- NumPy
+- TensorFlow 2.x (for Deep CFR)
+- Ray/RLlib (for RL examples)
+
+## Installation
+
+### From Source
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/poker-simulator.git
+cd poker-simulator
+
+# Build and install
+pip install -e .
