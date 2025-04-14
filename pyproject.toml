@@ -20,7 +20,11 @@ dependencies = [
     "tensorflow>=2.3.0",
     "tqdm",
     "wheel",
+    "matplotlib",
+    "pandas",
+    "seaborn"
 ]
+dynamic = ["classifiers"]
 
 [project.urls]
 "Homepage" = "https://github.com/yourusername/poker-simulator"
