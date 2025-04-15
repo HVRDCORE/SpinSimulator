@@ -7,19 +7,28 @@ Author-email: AI Assistant <example@example.com>
 License: MIT
 Project-URL: Homepage, https://github.com/yourusername/poker-simulator
 Project-URL: Bug Tracker, https://github.com/yourusername/poker-simulator/issues
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: C++
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 Requires-Dist: gym
-Requires-Dist: matplotlib>=3.7.5
 Requires-Dist: numpy
-Requires-Dist: pandas>=2.0.3
 Requires-Dist: pybind11>=2.6.0
-Requires-Dist: seaborn>=0.13.2
 Requires-Dist: setuptools>=42
 Requires-Dist: tensorflow>=2.3.0
 Requires-Dist: tqdm
 Requires-Dist: wheel
+Requires-Dist: matplotlib
+Requires-Dist: pandas
+Requires-Dist: seaborn
 Dynamic: author
+Dynamic: classifier
 Dynamic: requires-python
 
 # Spin&Go Poker Simulator

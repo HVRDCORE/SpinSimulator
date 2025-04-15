@@ -1,23 +1,24 @@
 # Spin&Go Poker Simulator
 
-A high-performance C++ Spin&Go poker simulator with Python bindings for reinforcement learning and tree traversal algorithms.
+A high-performance C++ Spin&Go poker simulator with Python bindings for reinforcement learning and tree traversal algorithms. Designed for AI research and poker strategy optimization.
 
 ## Features
 
 - **High Performance**: Fast C++ core implementation of Texas Hold'em rules for Spin&Go tournaments
 - **Python Integration**: Seamless Python bindings via pybind11 for integration with ML frameworks
-- **Reinforcement Learning**: Support for RL environments compatible with Ray/RLlib
+- **Reinforcement Learning**: Support for RL environments compatible with OpenAI Gym and Ray/RLlib
 - **Tree Traversal Algorithms**: Implementation of MCCFR and Deep CFR for solving poker games
 - **Optimized Hand Evaluation**: Efficient algorithms for poker hand evaluation
+- **Visualization & Logging**: Comprehensive data collection and visualization tools
 - **Comprehensive Testing**: Includes unit tests, benchmarks, and example scripts
 
 ## Benchmarks
 
 The simulator achieves excellent performance:
 
-- Hand evaluation: ~60,000-80,000 hands/second
-- Game simulation: ~2,000-4,000 complete games/second
-- Python bindings: ~10,000-15,000 operations/second
+- Hand evaluation: ~10,000-25,000 hands/second
+- Game simulation: ~1,000-2,000 complete games/second
+- Python bindings: ~5,000-7,000 operations/second
 
 ## Requirements
 
@@ -120,4 +121,13 @@ See the `python/examples/` directory for more examples:
 
 - `benchmark.py`: Performance benchmarks
 - `simple_game_test.py`: Basic game simulation
-- `rl_test.py`: Reinforcement learning integration
+- `tf_dqn_example.py`: TensorFlow Deep Q-Network implementation
+- `simple_text_visualization.py`: Data visualization and logging (no dependencies)
+- `visualization_demo.py`: Advanced visualization with matplotlib/seaborn
+
+## Documentation
+
+Comprehensive documentation is available in the project:
+
+- `API.md`: Complete API reference for all classes and functions
+- `DOCUMENTATION.md`: Detailed user guide with advanced examples

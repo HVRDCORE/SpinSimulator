@@ -2,225 +2,196 @@
 
 ## Overview
 
-This project is a high-performance C++ Spin&Go poker simulator with Python bindings, designed for reinforcement learning and tree traversal algorithms in poker strategy optimization. The core simulation engine is implemented in C++ for maximum performance, while Python bindings provide easy integration with ML frameworks.
+This project provides a high-performance poker simulator focused on Spin & Go tournaments, with special emphasis on reinforcement learning applications. The core simulation engine is written in C++ for efficiency, while providing Python bindings for easy integration with machine learning frameworks like TensorFlow and PyTorch.
 
 ## Architecture
 
-The project is structured into the following components:
+The simulator follows a modular design with these primary components:
 
-1. **C++ Core Library** - High-performance game logic and simulation engine
-2. **Python Bindings** - Interface between C++ core and Python
-3. **Poker AI Algorithms** - Deep CFR and MCCFR implementations
-4. **Visualization & Logging** - Tools for data collection and visualization
-5. **Testing Utilities** - Comprehensive testing suite
+1. **Core C++ Engine**
+   - Card representation and manipulation
+   - Hand evaluation
+   - Game state management
+   - Tournament logic
+
+2. **Python Bindings** 
+   - Interface with the C++ core
+   - Reinforcement learning environments
+   - Visualization tools
+   - Logging and data export
+
+3. **AI Components**
+   - Deep Q-Network (DQN) implementation
+   - Deep Counterfactual Regret Minimization (CFRD)
+   - Interface for custom agents
 
 ## Installation
 
-### Prerequisites
+### Requirements
+- C++ compiler with C++17 support
+- CMake (3.15+)
+- Python 3.8+ with pip
+- Libraries: TensorFlow, NumPy, Matplotlib, Seaborn
 
-- C++ compiler with C++14 support
-- CMake (3.10+)
-- Python 3.8+
-- pybind11
-- numpy, tensorflow (for RL components)
-- matplotlib, pandas, seaborn (for visualization)
-
-### Setup
+### Building from Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/poker-simulator.git
+git clone [repository-url]
 cd poker-simulator
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Build the C++ library
+# Build the C++ core and Python bindings
 python build_poker_core.py
+
+# Run tests
+python -m unittest discover tests
 ```
 
-## Core Components
+## Using the Simulator
 
-### C++ Components
-
-#### Cards & Deck (`card.cpp`, `deck.cpp`)
-
-The fundamental components representing playing cards and a shufflable deck.
-
-```cpp
-// Card representation
-Card card = Card(HEARTS, KING);
-std::string card_str = card.toString();  // "KH"
-
-// Deck operations
-Deck deck;
-deck.shuffle();
-Card dealt_card = deck.dealCard();
-```
-
-#### Hand Evaluator (`hand_evaluator.cpp`)
-
-Fast poker hand evaluation using optimized algorithms.
-
-```cpp
-HandEvaluator evaluator;
-std::vector<Card> cards = /* 7 cards (5 community + 2 hole) */;
-int hand_value = evaluator.evaluate(cards);
-HandType type = evaluator.getHandType(hand_value);
-```
-
-#### Game State (`game_state.cpp`)
-
-Manages the current state of a poker hand, including players, pot, community cards, and legal actions.
-
-```cpp
-GameState state(3, 1000, 10, 20);  // 3 players, 1000 chips, SB=10, BB=20
-state.dealHoleCards();
-state.dealFlop();
-std::vector<Action> legal_actions = state.getLegalActions();
-```
-
-#### Spin&Go Game (`spingo_game.cpp`)
-
-Implementation of a Spin&Go tournament format.
-
-```cpp
-SpinGoGame game(3, 1000, 10, 20, 2.0);  // 3 players, 1000 buy-in, SB=10, BB=20, 2x multiplier
-game.setSeed(42);
-game.playHand();
-bool is_over = game.isTournamentOver();
-```
-
-### Python Components
-
-#### Core Module (`poker_core`)
+### Basic Usage
 
 ```python
 import poker_core as pc
 
-# Create a game
+# Create a Spin & Go game
 game = pc.SpinGoGame(
     num_players=3,
     buy_in=1000,
     small_blind=10,
-    big_blind=20
+    big_blind=20,
+    prize_multiplier=2.0
 )
 
-# Access game state
-state = game.get_game_state()
-```
-
-#### Logging (`poker.logging`)
-
-Comprehensive logging system for tracking game progress and statistics.
-
-```python
-from poker.logging import GameLogger
-
-logger = GameLogger(log_dir="logs", export_format="json")
-logger.log_hand(hand_num, actions, winners, pot, players, community_cards)
-logger.export_data()
-```
-
-#### Visualization (`poker.visualization`)
-
-Tools for visualizing game data and statistics.
-
-```python
-from poker.visualization import PokerVisualizer
-
-visualizer = PokerVisualizer(data_file, output_dir="visualizations")
-visualizer.plot_bankrolls()
-visualizer.plot_pot_sizes()
-visualizer.create_all_visualizations()
-```
-
-#### Testing (`poker.testing`)
-
-Utilities for stress testing and tournament simulation.
-
-```python
-from poker.testing import run_tournament_simulation, stress_test_hand_evaluation
-
-# Run stress test
-results = stress_test_hand_evaluation(num_iterations=100000)
-
-# Simulate tournament
-tournament_results = run_tournament_simulation(
-    num_players=3,
-    max_hands=100,
-    visualize=True
-)
-```
-
-## Usage Examples
-
-### Simple Game Simulation
-
-```python
-import poker_core as pc
-
-# Create a game
-game = pc.SpinGoGame(
-    num_players=3,
-    buy_in=1000,
-    small_blind=10,
-    big_blind=20
-)
-
-# Set seed for reproducibility
+# Set a seed for reproducibility
 game.set_seed(42)
 
-# Get game state
+# Play a hand
+game.play_hand()
+
+# Get the game state
 state = game.get_game_state()
 
-# Deal hole cards
-state.deal_hole_cards()
+# Print information about the current state
+print(f"Pot: {state.get_pot()}")
+print(f"Current player: {state.get_current_player_index()}")
+print(f"Hand is over: {state.is_hand_over()}")
 
-# Play a hand
-while not state.is_hand_over():
-    current_player_idx = state.get_current_player_index()
-    legal_actions = state.get_legal_actions()
-    
-    # Choose an action (e.g., from an AI agent)
-    action = choose_action(legal_actions)
-    
-    # Apply the action
-    state.apply_action(action)
+# Continue playing until the tournament is over
+while not game.is_tournament_over():
+    game.play_hand()
 
-# Check winners
-winners = game.get_last_hand_winners()
+# Get the winner
+winner = game.get_tournament_winner()
+print(f"Tournament winner: Player {winner}")
 ```
 
-### Tournament with Visualization
+### Reinforcement Learning
+
+The simulator provides a reinforcement learning environment that follows the OpenAI Gym interface:
+
+```python
+from poker.rl_interface import RLEnvironment
+
+# Create the environment
+env = RLEnvironment(num_players=3, initial_stack=1000, small_blind=10, big_blind=20)
+
+# Reset the environment
+observation = env.reset()
+
+# Take steps in the environment
+action = 1  # For example, CHECK action
+next_observation, reward, done, info = env.step(action)
+```
+
+### Deep Q-Network Example
+
+```python
+from poker.rl_interface import RLEnvironment
+from python.examples.tf_dqn_example import DQNAgent, train_dqn_agent
+
+# Create environment
+env = RLEnvironment(num_players=3, initial_stack=1000, small_blind=10, big_blind=20)
+
+# Create agent
+agent = DQNAgent(
+    state_size=env.observation_space.shape[0],
+    action_size=env.action_space.n,
+    memory_size=100000,
+    batch_size=64,
+    gamma=0.95,
+    epsilon=1.0,
+    epsilon_min=0.01,
+    epsilon_decay=0.995,
+    learning_rate=0.001
+)
+
+# Train agent
+episode_rewards = train_dqn_agent(
+    env=env,
+    agent=agent,
+    episodes=1000,
+    target_update_freq=100,
+    batch_size=32,
+    max_steps=200,
+    render_freq=100,
+    save_freq=100,
+    save_dir="models/dqn"
+)
+```
+
+### Deep CFR Example
+
+```python
+import poker_core as pc
+from poker.deep_cfr import DeepCFRSolver
+
+# Create a game
+game = pc.SpinGoGame(num_players=3, buy_in=1000, small_blind=10, big_blind=20)
+
+# Create solver
+solver = DeepCFRSolver(
+    game,
+    hidden_layers=[256, 256],
+    learning_rate=0.001,
+    memory_size=1000000
+)
+
+# Train the solver
+solver.train(
+    iterations=50,
+    traversals_per_iter=100,
+    advantage_training_epochs=5,
+    strategy_training_epochs=5,
+    batch_size=128
+)
+
+# Use the trained strategy
+action_probs = solver.get_strategy(game.get_game_state(), 0)
+```
+
+### Data Logging and Visualization
+
+The simulator includes tools for logging game data and creating visualizations:
 
 ```python
 from poker.logging import GameLogger
 from poker.visualization import PokerVisualizer
 
-# Create logger
+# Create a logger
 logger = GameLogger(log_dir="logs", export_format="json")
 
-# Create game
-game = pc.SpinGoGame(num_players=3, buy_in=1000, small_blind=10, big_blind=20)
+# Log a hand
+logger.log_hand(
+    hand_num=1,
+    actions=state.get_action_history(),
+    winners=[0],
+    pot=100,
+    players=state.get_players(),
+    community_cards=state.get_community_cards()
+)
 
-# Play tournament
-for _ in range(20):  # Play 20 hands
-    # Play a hand
-    game.play_hand()
-    
-    # Log results
-    state = game.get_game_state()
-    logger.log_hand(
-        hand_num=i+1,
-        actions=state.get_action_history(),
-        winners=game.get_last_hand_winners(),
-        pot=state.get_pot(),
-        players=state.get_players(),
-        community_cards=state.get_community_cards()
-    )
-
-# Export data
+# Export the data
 data_file = logger.export_data()
 
 # Create visualizations
@@ -228,106 +199,100 @@ visualizer = PokerVisualizer(data_file, output_dir="visualizations")
 visualizer.create_all_visualizations()
 ```
 
-### Reinforcement Learning Integration
+## Advanced Usage
+
+### Custom Agents
+
+You can create custom agents to play poker by implementing a function that takes legal actions and returns one of them:
 
 ```python
-from poker.rl_interface import RLEnvironment
-
-# Create RL environment
-env = RLEnvironment(
-    num_players=3,
-    initial_stack=1000,
-    small_blind=10,
-    big_blind=20
-)
-
-# RL training loop
-obs = env.reset()
-for _ in range(1000):
-    action = model.predict(obs)  # Your RL model
-    next_obs, reward, done, info = env.step(action)
+def custom_agent(legal_actions, player_idx, state):
+    """
+    A custom poker agent.
     
-    if done:
-        obs = env.reset()
-    else:
-        obs = next_obs
+    Args:
+        legal_actions: List of legal Action objects
+        player_idx: The player's index
+        state: The current game state
+        
+    Returns:
+        A poker Action object
+    """
+    # Always check if possible
+    action_types = [a.get_type() for a in legal_actions]
+    if pc.ActionType.CHECK in action_types:
+        return next(a for a in legal_actions if a.get_type() == pc.ActionType.CHECK)
+    
+    # Otherwise, fold
+    return next(a for a in legal_actions if a.get_type() == pc.ActionType.FOLD)
 ```
 
-## Performance Benchmarks
+### Tournament Customization
 
-The simulator achieves the following performance metrics:
+You can customize tournaments with blind structures and prize multipliers:
 
-- **Hand Evaluation**: ~61,000 hands/second
-- **Game Simulation**: ~1,200 hands/second
-- **Python Bindings**: ~9,200 iterations/second
+```python
+# Create game with customizable prize multiplier
+game = pc.SpinGoGame(num_players=3, buy_in=1000, prize_multiplier=5.0)
 
-These benchmarks make the simulator suitable for training advanced AI algorithms that require millions of game simulations.
+# Add a blind structure
+game.add_blind_level(10, 20, 0)    # Initial blinds
+game.add_blind_level(20, 40, 5)    # After 5 hands
+game.add_blind_level(50, 100, 10)  # After 10 hands
+game.add_blind_level(100, 200, 15) # After 15 hands
+```
 
-## Advanced Topics
+### Parallel Simulations
 
-### Multi-threading Support
-
-The simulator supports parallel tournament simulations for improved performance:
+The framework supports running multiple simulations in parallel:
 
 ```python
 from poker.testing import parallel_tournament_simulations
 
+# Run 10 tournaments in parallel with 4 threads
 results = parallel_tournament_simulations(
     num_tournaments=10,
     num_threads=4,
     num_players=3,
-    max_hands=100
+    buy_in=1000,
+    small_blind=10,
+    big_blind=20
 )
+
+# Analyze results
+win_counts = {i: 0 for i in range(3)}
+for result in results:
+    win_counts[result["winner"]] += 1
+
+print(f"Win distribution: {win_counts}")
 ```
 
-### Customizing Blind Schedules
+## Performance Benchmarks
 
-Spin&Go tournaments can be configured with custom blind schedules:
+The simulator is designed for high performance. Benchmark results on reference hardware:
 
-```python
-game = pc.SpinGoGame(num_players=3, buy_in=1000, small_blind=10, big_blind=20)
+- Hand evaluation: ~5-10 million hands per second
+- Complete Spin & Go tournament: ~2,000-5,000 tournaments per second
+- DQN training: ~500-1,000 steps per second
 
-# Add blind levels
-game.add_blind_level(10, 20, 0)    # Initial level
-game.add_blind_level(20, 40, 10)   # After 10 hands
-game.add_blind_level(30, 60, 20)   # After 20 hands
-```
+## Extending the Framework
 
-## Extending the Simulator
+The framework is designed to be extensible. Key extension points include:
 
-### Implementing Custom Agents
-
-You can implement custom poker agents by creating functions that select actions:
-
-```python
-def my_poker_agent(legal_actions, player_idx, state):
-    """
-    Custom poker agent implementation.
-    
-    Args:
-        legal_actions: List of legal Action objects
-        player_idx: Player index
-        state: Current game state
-        
-    Returns:
-        Selected Action object
-    """
-    # Your strategy logic here
-    return chosen_action
-```
-
-### Adding New Game Formats
-
-The simulator can be extended to support other poker variants by implementing new game classes in C++.
+1. **Custom card evaluation**: Extend the `HandEvaluator` class
+2. **New game variants**: Create classes similar to `SpinGoGame`
+3. **Agent algorithms**: Implement in the Python layer
+4. **Reward functions**: Customize in the `RLInterface` class
 
 ## Troubleshooting
 
-### Common Issues
+Common issues and solutions:
 
-1. **Installation Errors**: Make sure all dependencies are installed and your C++ compiler supports C++14.
-2. **Build Failures**: Delete CMakeCache.txt and rebuild if you encounter build issues.
-3. **Performance Problems**: For optimal performance, compile with release mode (`-DCMAKE_BUILD_TYPE=Release`).
+1. **Python can't find the module**: Ensure the `.so` file is in your Python path.
+2. **Compilation errors**: Verify you have the correct C++ compiler and CMake version.
+3. **TensorFlow errors**: TensorFlow 2.x is required for the machine learning components.
+4. **Memory issues**: For large simulations, you may need to reduce batch sizes or training parameters.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
